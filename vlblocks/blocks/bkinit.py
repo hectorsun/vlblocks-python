@@ -17,7 +17,8 @@ def bkinit(type,*varargin):
         #    raise TypeError
         
         bk['inputs'].append(var)
-        bk[var]={'tag':'',
-                 'timestamp':0}
+        bk[var]={}
+        bk[var]['tag'] = '',
+        bk[var]['timestamp'] = 0
     
     return bk

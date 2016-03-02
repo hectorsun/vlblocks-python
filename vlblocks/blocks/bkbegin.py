@@ -3,6 +3,10 @@ from vlblocks.generics import glb
 from vlblocks import generics
 import cPickle as pickle
 import pdb
+import types
+from bkfetch import bkfetch
+
+
 
 def bkbegin(bk):
     '''
@@ -51,8 +55,8 @@ def bkbegin(bk):
         except:
             bk_old={}
             dirty=True
-        print bk
-        print bk_old
+        #print bk
+        #print bk_old
         
         if not xdiff(type_, bk, bk_old):
             dirty=1
@@ -66,22 +70,21 @@ def bkbegin(bk):
     
     ##################################################
     # check if inputs have changed
-    i=0
     for in_name in bk['inputs']:
-        in_tag  = bk[in_name].tag
+        in_tag  = bk[in_name]['tag']
 
         if in_tag == '':
             print('block_%s: input "%s" missing'.type_, in_name)
             continue
         #end if in_tag==''
 
-        in_ = bkfeatch(in_tag)
-        if in_timestamp > bk['in_name'].timestamp:
+        in_ = bkfetch(in_tag)
+        
+        if in_['timestamp'] > bk[in_name]['timestamp']:
             print('block_%s: input "%s" changed'%(type_,in_name))
             dirty = True;
         #end if in_ ...
-        bk[in_name].timestamp = in_.timestamp
-        i=i+1
+        bk[in_name]['timestamp'] = in_['timestamp']        
     #end for i in range(len(bk.inputs))
     
 

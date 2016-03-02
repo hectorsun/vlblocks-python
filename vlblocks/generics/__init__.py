@@ -1,6 +1,7 @@
 #Todo : import function in modules automatically
 #       except in exc_list
 
+__all__ = []
 import os
 path = os.path.abspath(__file__)
 if os.path.isfile(path):
@@ -16,3 +17,4 @@ for fn in file_list:
             cmd = 'from .%s import %s'%(f,f)
             #print cmd
             exec(cmd)
+            __all__.append(f)

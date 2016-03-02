@@ -1,7 +1,9 @@
 from vlblocks.generics import glb
 from vlblocks import generics
 import cPickle as pickle
+import os
 
+from bktag import bktag
 
 def bkfetch(bk,*varargin):
     '''
@@ -20,13 +22,13 @@ def bkfetch(bk,*varargin):
         if isinstance(bk, dict):
             return bk
         else:
-            file = os.path.join(glb.wrd['prefix'],bktag[bk], 'cfg.pkl')
+            file = os.path.join(glb.wrd['prefix'], bktag(bk), 'cfg.pkl')
             if not os.path.exists(file):
                 raise IOError
             return pickle.load(open(file, 'rb'))
     else:
         if isinstance(bk, str):
             bk=bkfetch(bk)
-        return bk['fetch'](bk,varargin)
+        return bk['fetch'](bk,varargin[0])
     #if len(varargin)==0
             

@@ -1,9 +1,7 @@
 # Todo do lazy-import 
 
 # import all modules in blocks
-#from .blocks.bkinit import bkinit
-#from .blocks.bkbegin import bkbegin
-#from .blocks.bkfetch import bkfetch
+__all__=[]
 import os
 path=os.path.abspath(__file__)
 if os.path.isfile(path):
@@ -18,11 +16,12 @@ exc_list=('__init__')
 for fn in file_list:
     #print fn
     f,ext=os.path.splitext(fn)
+    #print fn
     if ext == cur_ext:
         if not f in exc_list:
             cmd = 'from .blocks.%s import %s'%(f,f)
             exec(cmd)
-    
+            __all__.append(f)
 
 
 
