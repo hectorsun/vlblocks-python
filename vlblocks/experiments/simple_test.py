@@ -1,13 +1,15 @@
 import vlblocks
 import cPickle as pickle
-
+import pdb
+import numpy as np
+import os
 
 def simple_test():
     vlblocks.glb.wrd['prefix']='test';
     bk = block_test()
     bk['imsize']=100
     bk['tag']='test@imresiz100'
-    #bk = block_test(bk);
+    bk = block_test(bk);
     print(bk)
 
 
@@ -27,7 +29,7 @@ def block_test(bk='',*varargin):
     output=np.arange(bk['imsize'])
 
     #save
-    path = os.path.join(vlblocks.glb.wrd.prefix, bk['tag'], 'test.pkl')
+    path = os.path.join(vlblocks.glb.wrd['prefix'], bk['tag'], 'test.pkl')
     pickle.dump(output,open(path,'wb'))
     
     # end

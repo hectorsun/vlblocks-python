@@ -9,7 +9,15 @@ def bkinit(type,*varargin):
         'tag'       :  '',
         'timestamp' :  '',
         'started'   :  '',
-        'inputs'    :  {},
+        'inputs'    :  [],
     }
+
+    for var in varargin:
+        #if not isinstance(var,str):
+        #    raise TypeError
+        
+        bk['inputs'].append(var)
+        bk[var]={'tag':'',
+                 'timestamp':0}
     
     return bk

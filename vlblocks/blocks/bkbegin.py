@@ -51,6 +51,8 @@ def bkbegin(bk):
         except:
             bk_old={}
             dirty=True
+        print bk
+        print bk_old
         
         if not xdiff(type_, bk, bk_old):
             dirty=1
@@ -61,26 +63,27 @@ def bkbegin(bk):
         print('block%s: ')%(type_)
         dirty=True
 
-    '''
+    
     ##################################################
     # check if inputs have changed
-    for i in range(len(bk.inputs)):
-        in_name = bk['inputs'][i]
+    i=0
+    for in_name in bk['inputs']:
         in_tag  = bk[in_name].tag
 
         if in_tag == '':
-            print()
+            print('block_%s: input "%s" missing'.type_, in_name)
             continue
-        #end if in_tag=''
+        #end if in_tag==''
 
         in_ = bkfeatch(in_tag)
-        if in_timestamp > bk.(in_name).timestamp:
+        if in_timestamp > bk['in_name'].timestamp:
+            print('block_%s: input "%s" changed'%(type_,in_name))
             dirty = True;
-
         #end if in_ ...
         bk[in_name].timestamp = in_.timestamp
+        i=i+1
     #end for i in range(len(bk.inputs))
-    '''
+    
 
     
     if not dirty:
@@ -122,11 +125,19 @@ def xdiff(type_,a,b,path=''):
                     eq = eq & xdiff(type_,a[key],b[key])
             # for key in a.keys()
         #if len(a) !=len(b)
-    elif isinstance(a,(int,long,float,complex,str)):
+    else:
+        eq = eq& isequalwithequalnans(a,b);
+        if not eq:
+            print()
+    return eq
+
+def isequalwithequalnans(a,b):
+    eq = True
+    if isinstance(a,(int,long,float,complex,str,list,)):
         eq = (0== cmp(a,b))
     elif type(a) is types.FunctionType:
-        eq=True
+        eq= (a==b)
     else:
+        print('type(a)=%s'%(str(type(a))))
         raise TypeError
-                
     return eq
