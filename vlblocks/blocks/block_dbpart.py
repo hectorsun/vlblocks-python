@@ -22,6 +22,7 @@ def block_dbpart(bk=''):
     ################################
     bk,dirty = bkbegin(bk)
     if not dirty:
+        print('block_dbpart is not dirty')
         return bk
 
     db_cfg = bkfetch(bk['db']['tag'])
@@ -39,7 +40,7 @@ def block_dbpart(bk=''):
     if bk['db_type'] == 'graz02':
         fg = db['cat_names'].index(bk['fg_cat'])
         bg = db['cat_names'].index('none')
-        print str(fg)+ str(bg)
+        #print str(fg)+ str(bg)
         
         segs = db['segs']
         selp = [n for n in range(0, len(segs)) if segs[n]['cat']==fg  ] 
@@ -48,15 +49,18 @@ def block_dbpart(bk=''):
         selp = selp[0:150+75]
         seln = seln[0:150+75]
 
-        selp_test = [selp[n] for n in range(0,len(selp),3)]
-        seln_test = [seln[n] for n in range(0,len(seln),3)]
+        selp_test = [selp[n] for n in range(2,len(selp),3)]
+        seln_test = [seln[n] for n in range(2,len(seln),3)]
 
-        selp_train = [selp[n] for n in range(0,len(selp)) if n%3!=0 ] 
-        seln_train = [seln[n] for n in range(0,len(selp)) if n%3!=0 ]
-
-        
-        db['segs'] = [db['segs'][n] for n in selp_train ] + [db['segs'][n] for n in seln_train ] +\
-                     [db['segs'][n] for n in selp_test ] +  [db['segs'][n] for n in seln_test ]
+        #selp_train = [selp[n] for n in range(0,len(selp)) if n%3!=0 ] 
+        #seln_train = [seln[n] for n in range(0,len(selp)) if n%3!=0 ]
+        selp_train = list(set(selp) - set(selp_test))
+        selp_train.sort()
+        seln_train = list(set(seln) - set(seln_test))
+        seln_train.sort()
+        db['segs'] = [db['segs'][n] for n in selp_train+seln_train+selp_test+seln_test]
+        #db['segs'] = [db['segs'][n] for n in selp_train ] + [db['segs'][n] for n in seln_train ] +\
+        #             [db['segs'][n] for n in selp_test ] +  [db['segs'][n] for n in seln_test ]
         
         #print selp_test
         #print '-'*80
@@ -72,8 +76,8 @@ def block_dbpart(bk=''):
         for n in range(300, 450):
             db['segs'][n]['flag'] = db['TEST']
 
-        #for seg in db['segs']:
-        #    print seg
+        for seg in db['segs']:
+            print seg
 
         db['cat_ids'] = [fg, bg]
 
@@ -89,7 +93,7 @@ def block_dbpart(bk=''):
     pickle.dump(db, open(path, 'wb'))
 
     
-    #bk = bkend(bk)
+    bk = bkend(bk)
     
     return bk
 

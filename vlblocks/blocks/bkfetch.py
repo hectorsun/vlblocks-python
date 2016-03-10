@@ -5,30 +5,33 @@ import os
 
 from bktag import bktag
 
+import pdb
 def bkfetch(bk,*varargin):
     '''
     bk = bkfetch(bk)  return bk unchanged
     bk = bkfetch(TAG) returns the block bk corresonding to TAG
     '''
     if isinstance(bk, dict):
-        if bk.has_key('tag'):
-            raise TypeError
+        if not bk.has_key('tag'):
+            raise TypeError('BK structure malformed has no .TAG field')
 
     if isinstance(bk, str):
         if bk == '':
-            raise TypeError
+            raise TypeError('Tag name empty')
 
     if len(varargin)==0:
         if isinstance(bk, dict):
             return bk
         else:
-            file = os.path.join(glb.wrd['prefix'], bktag(bk), 'cfg.pkl')
-            if not os.path.exists(file):
-                raise IOError
-            return pickle.load(open(file, 'rb'))
+            f = os.path.join(glb.wrd['prefix'], bktag(bk), 'cfg.pkl')
+            if not os.path.exists(f):
+                raise IOError('bloock %s does not exist'%(f))
+            return pickle.load(open(f, 'rb'))
     else:
         if isinstance(bk, str):
             bk=bkfetch(bk)
-        return bk['fetch'](bk,varargin[0])
+        varargout =  bk['fetch'](bk,varargin[0], varargin[1:])
+        #pdb.set_trace()
+        return varargout
     #if len(varargin)==0
             

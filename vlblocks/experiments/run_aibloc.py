@@ -1,6 +1,8 @@
 from aibloc import aibloc
 from vlblocks import generics
 
+import pdb
+
 #cats=['bike', 'cars', 'person']
 cats=['bike']
 
@@ -15,7 +17,7 @@ dictionary_types=['hikm']
 
 
 #aib_types=(0, 5, 40, 200, 400)
-aib_types=[0]
+aib_types=[5]
 
 param={'prefix':'/home/sh/tmp/run_aibloc/',
        'db_path':'/home/sh/Data/TestData/Graz-02/data',
@@ -35,7 +37,7 @@ for c in cats:
             for a in aib_types:
                 param['use_aib'] = (a>0)
                 param['aib_nwords']=a
-                param['dict_dictionary']=a
+                param['dict_dictionary']=q
                 param['dict_tag']='_%s'%(q)
 
                 if param['dict_dictionary'] == 'hikm':
@@ -51,7 +53,7 @@ for c in cats:
 
                 if param['dict_dictionary'] == 'hikm' and onlyleaves == False:
                     param['dict_hikm_only_leaves'] = False
-                    param['dict_tag'] = '%_fulltree'%(param['dict_tag'])
+                    param['dict_tag'] = '%s_fulltree'%(param['dict_tag'])
                 else:
                     param['dict_hikm_only_leaves'] = True
 

@@ -122,7 +122,7 @@ def block_feat(bk='', *varargin):
 
 
 
-def fetch__(what, *varargin):
+def fetch__(bk, what, *varargin):
     if what == 'descriptors':
         i = varargin[0]
         path = os.path.join(glb.wrd['prefix'],'data','%05d.d.pkl'%(i))
@@ -133,5 +133,6 @@ def fetch__(what, *varargin):
         varargout = pickle.load(open(path, 'rb'))
     else:
         raise TypeError
-        
+
+    #pdb.set_trace()
     return varargout
