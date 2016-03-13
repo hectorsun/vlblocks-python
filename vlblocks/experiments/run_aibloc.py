@@ -21,7 +21,7 @@ aib_types=[5]
 
 param={'prefix':'/home/sh/tmp/run_aibloc/',
        'db_path':'/home/sh/Data/TestData/Graz-02/data',
-       'db_seg_prefix':'~/data/graz02/cats',
+       'db_seg_prefix':'/home/sh/Data/TestData/Graz-02/groundtruth',
        'ikm_nwords':100,
        'dict_hikm_K':10,
        'dict_hikm_nleaves':1000,
@@ -30,7 +30,7 @@ param={'prefix':'/home/sh/tmp/run_aibloc/',
 }
 
 
-param['use_segs']=True
+param['use_segs']=False
 for c in cats:
     for d in detector_types:
         for q in dictionary_types:

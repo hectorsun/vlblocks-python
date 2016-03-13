@@ -28,17 +28,17 @@ def block_dict_sel(bk=''):
         
 
 
-def push__(dict_, d):
+def push__(bk,dict_, d):
     bkdict = bkfetch(bk['dict']['tag'])
-    dict_  = bkfetch(bkdict, 'dictionary', bk['selection'])
-    w,h,sel= bkdict['push'](dict_, d)
+    dict_1  = bkfetch(bkdict, 'dictionary', bk['selection'])
+    w,h,sel= bkdict['push'](bkdict, dict_, d)
     return w,h,sel
 
 
 def fetch__(bk, what, *varargin):
     if what == 'type':
         return bkfetch(bk['dict']['tag'], 'type')
-    elif what in ('dict', 'dictionary'):
-        return bkfetch(bk['dict']['tag'], bk['selection'])
+    elif what =='dict'or what=='dictionary' :
+        return bkfetch(bk['dict']['tag'], 'dictionary', bk['selection'])
     else:
-        print('unknown %s'%(what))
+        raise TypeError('unknown %s'%(what))

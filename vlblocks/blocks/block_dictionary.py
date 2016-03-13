@@ -230,37 +230,57 @@ def learn(bk, descr):
         print('block_dictionary: num leaves:      %d'%(bk['hikm_nleaves']))
         print('block_dictionary: branching (K):   %d'%(bk['hikm_K']))
         print('block_dictionary: only_leaves:     %d'%(bk['hikm_only_leaves']))
-        dict_ = vlfeat.vl_hikmeans(descr,
-                                   bk['hikm_K'],
-                                   bk['hikm_nleaves'],
-                                   verbose=1 ,
-                                   method='elkan')
+        dict_,asgn = vlfeat.vl_hikmeans(descr,
+                                        bk['hikm_K'],
+                                        bk['hikm_nleaves'],
+                                        verbosity=1 ,
+                                        method='elkan')
         print('block_dictionary: HIKM done')
     else:
         raise TypeError('block_dictionary.py :learn() unknown dictionary type')
 
     return dict_
         
-def ikm_push__(dict_, d):
-    print('ikm_push__ : unimplemented')
-    pass
+def ikm_push__(bk, dict_, d):
+    w = vl_ikmeanspush(d, dict_)
+    h = vlblock.vl_ikmeanshist(dict_.shape[1], w)
+    sel = np.arange(w.shape[0])
+    return w, h,sel
 
 
-def hikm_push__(dict_, d):
-    w=vl_hikmeanspush(dict_, d)
+def hikm_push__(bk, dict_, d):
+    #pdb.set_trace()
+    
+    w=vlfeat.vl_hikmeanspush(dict_, d, verbosity=1)
     ndescriptors = d.shape[1]
+    
     if bk['hikm_only_leaves']==True:
-        temp = np.zeros((1,w.shape[1]))
+        # convert PATH to leaves to leaf ids
+        temp = np.zeros([1,w.shape[1]],dtype=np.double)
         for d_ in range(dict_['depth']):
-            temp = tmp * dict['K']
+            temp = tmp * dict_['K']
             temp = tmp + w[d_,:] -1
 
         w = tmp + 1
-        h = vl_ikemeanshift(dict_[K]^dict_[detph],w)
-        sel=range(ndescriptors)
+        hist = vlfeat.vl_ikemeanshift(dict_[K]^dict_[detph],w)
+        sel=np.arange(ndescriptors)
     else:
-        pass
-    return 
+        wtmp = w.copy()
+        nodes = np.zeros([dict_['depth']+1, w.shape[1]], dtype=np.int)
+        nodes[0,:] = 1 # Root node
+        #pdb.set_trace()
+        for d in range(dict_['depth']):
+            if d >0:
+                wtmp[0:d-1, :] = wtmp[0:d-1, :]*dict_['K']
+                nodes[d+1,:] = wtmp[0:d+1, :].sum() + 1
+            else:
+                nodes[d+1,:] = wtmp[0,:] + 1
+
+        #pdb.set_trace()
+        hist = vlfeat.vl_hikmeanshist(dict_, w)
+        sel = np.tile(np.arange(ndescriptors) ,(dict_['depth']+1, 1))
+        sel = sel.flatten()
+    return w, hist, sel
 
 def fetch__(bk, what, *varargin):
     if what == 'type':

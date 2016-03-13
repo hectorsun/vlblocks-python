@@ -168,63 +168,65 @@ def aibloc(param):
         #####################################################
         # select a dictionary
         ex['dictsel'] = vlblocks.block_dict_sel()
-        ex['dictsel']['tag'] = 'dictsel@%s_tri%d'%(vlblock.bkver(ex['dict']['tag']),trial)
+        ex['dictsel']['tag'] = 'dictsel@%s_tri%d'%(vlblocks.bkver(ex['dict']['tag']),trial)
         ex['dictsel']['selection'] = trial
 
-        ex['dictsel'] = vlblocks.bkplug(ex['dictsel'], ex['dict']['tag'])
+        ex['dictsel'] = vlblocks.bkplug(ex['dictsel'], 'dict', ex['dict']['tag'])
         ex['dictsel'] = vlblocks.block_dict_sel(ex['dictsel'])
         
-        
+        #pdb.set_trace()
         #####################################################
         # compute histograms
         ex['hist'] = vlblocks.block_hist()
         if param['use_segs']:
-            ex['hist']['tag'] = 'hist@%s_seg'%(vlblock.bkver(ex['dictsel']['tag']))
+            ex['hist']['tag'] = 'hist@%s_seg'%(vlblocks.bkver(ex['dictsel']['tag']))
             ex['hist']['seg_prefix'] = param['db_seg_prefix']
-            ex['hist']['seg_ext'] = 'png'
+            ex['hist']['seg_ext'] = 'jpg'
             ex['hist']['fg_id'] = param['fg_id']
             ex['hist']['fg_cat'] = param['fg_cat']
         else:
-            ex['hist']['tag'] = 'hist@%s'%(vlblock.bkver(ex['dictsel']['tag']))
+            ex['hist']['tag'] = 'hist@%s'%(vlblocks.bkver(ex['dictsel']['tag']))
 
         ex['hist']['split'] = 30
         ex['hist']['min_sigma'] = param['hist_min_sigma']
-        ex['hist'] = vlblock.bkplug(ex['hist'], 'db',   ex['depart']['tag'])
-        ex['hist'] = vlblock.bkplug(ex['hist'], 'feat', ex['feat']['tag'])
-        ex['hist'] = vlblock.bkplug(ex['hist'], 'dict', ex['dictsel']['tag'])
-        ex['hist'] = vlblock.block_hist(ex['hist'])
+        ex['hist'] = vlblocks.bkplug(ex['hist'], 'db',   ex['dbpart']['tag'])
+        ex['hist'] = vlblocks.bkplug(ex['hist'], 'feat', ex['feat']['tag'])
+        ex['hist'] = vlblocks.bkplug(ex['hist'], 'dict', ex['dictsel']['tag'])
+        ex['hist'] = vlblocks.block_hist(ex['hist'])
 
+        pdb.set_trace()
+        
         if param['use_aib'] == True:
-            ex['aib'] = vlblock.block_aib()
+            ex['aib'] = vlblocks.block_aib()
             ex['aib']['tag'] = 'aib@%s'%(ex['hist']['tag'])
             if param['partition_data'] ==True:
                 ex['aib']['sed_ids'] = dict_seg_ids
-            ex['aib'] = vlblock.bkplug(ex['aib'], 'db' ,ex['dbpart']['tag'])
-            ex['aib'] = vlblock.bkplug(ex['aib'], 'hist' ,ex['hist']['tag'])
+            ex['aib'] = vlblocks.bkplug(ex['aib'], 'db' ,ex['dbpart']['tag'])
+            ex['aib'] = vlblocks.bkplug(ex['aib'], 'hist' ,ex['hist']['tag'])
 
-            ex['aibdict'] = vlblock.block_aibdict()
+            ex['aibdict'] = vlblocks.block_aibdict()
             ex['aibdict']['nwords'] = param['aib_nwords']
-            ex['aibdict']['tag']    = 'aibdict@%s_aib%d'%(vlblock.bkver(ex['aib']), param['aib_nwords'])
-            ex['aibdict'] = vlblock.bkplug(ex['aibdict'], 'aib', ex['aib']['tag'])
-            ex['aibdict'] = vlblock.bkplug(ex['aibdict'], 'dict', ex['dict']['tag'])
-            ex['aibdict'] = vlblock.block_aibdict(ex['aibdict'])
+            ex['aibdict']['tag']    = 'aibdict@%s_aib%d'%(vlblocks.bkver(ex['aib']), param['aib_nwords'])
+            ex['aibdict'] = vlblocks.bkplug(ex['aibdict'], 'aib', ex['aib']['tag'])
+            ex['aibdict'] = vlblocks.bkplug(ex['aibdict'], 'dict', ex['dict']['tag'])
+            ex['aibdict'] = vlblocks.block_aibdict(ex['aibdict'])
 
             ex['hist_noaib'] = ex['hist']
-            ex['hist'] = vlblock.block_hist()
+            ex['hist'] = vlblocks.block_hist()
             if param['use_segs'] == True:
-                ex['hist']['tag'] = 'hist@%s_seg'%(vlblock.bkver(ex['aibdict']['tag']))
+                ex['hist']['tag'] = 'hist@%s_seg'%(vlblocks.bkver(ex['aibdict']['tag']))
                 ex['hist']['seg_prefix'] = param['db_seg_prefix']
                 ex['hist']['seg_ext'] = 'png'
                 ex['hist']['fg_id'] = param['fg_id']
                 ex['hist']['fg_cat'] = param['fg_cat']
             else:
-                ex['hist']['tag'] = 'hist@%s'%(vlblock.bkver(ex['aibdict']['tag']))
+                ex['hist']['tag'] = 'hist@%s'%(vlblocks.bkver(ex['aibdict']['tag']))
             ex['hist']['split'] = 30
             ex['hist']['min_sigma'] = param['hist_min_sigma']
-            ex['hist'] = vlblock.bkplug(ex['hist'], 'db', ex['dbpart']['tag'])
-            ex['hist'] = vlblock.bkplug(ex['hist'], 'feat', ex['feat']['tag'])
-            ex['hist'] = vlblock.bkplug(ex['hist'], 'dict', ex['aibdict']['tag'])
-            ex['hist'] = vlblock.block_hist(ex['hist'])
+            ex['hist'] = vlblocks.bkplug(ex['hist'], 'db', ex['dbpart']['tag'])
+            ex['hist'] = vlblocks.bkplug(ex['hist'], 'feat', ex['feat']['tag'])
+            ex['hist'] = vlblocks.bkplug(ex['hist'], 'dict', ex['aibdict']['tag'])
+            ex['hist'] = vlblocks.block_hist(ex['hist'])
             
         #####################################################
         # compute kernel
