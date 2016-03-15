@@ -162,6 +162,7 @@ def aibloc(param):
     #print ex['dict']
     ex['dict'] = vlblocks.block_dictionary(ex['dict'])
 
+    #pdb.set_trace()
     ########################################################
     # repeat kernels, learn svms, test svms,
     for trial in range(param['dict_ntrials']):
@@ -194,7 +195,7 @@ def aibloc(param):
         ex['hist'] = vlblocks.bkplug(ex['hist'], 'dict', ex['dictsel']['tag'])
         ex['hist'] = vlblocks.block_hist(ex['hist'])
 
-        pdb.set_trace()
+        #pdb.set_trace()
         
         if param['use_aib'] == True:
             ex['aib'] = vlblocks.block_aib()
@@ -203,7 +204,11 @@ def aibloc(param):
                 ex['aib']['sed_ids'] = dict_seg_ids
             ex['aib'] = vlblocks.bkplug(ex['aib'], 'db' ,ex['dbpart']['tag'])
             ex['aib'] = vlblocks.bkplug(ex['aib'], 'hist' ,ex['hist']['tag'])
+            ex['aib'] = vlblocks.block_aib(ex['aib'])
 
+            pdb.set_trace()
+
+            
             ex['aibdict'] = vlblocks.block_aibdict()
             ex['aibdict']['nwords'] = param['aib_nwords']
             ex['aibdict']['tag']    = 'aibdict@%s_aib%d'%(vlblocks.bkver(ex['aib']), param['aib_nwords'])
@@ -211,7 +216,9 @@ def aibloc(param):
             ex['aibdict'] = vlblocks.bkplug(ex['aibdict'], 'dict', ex['dict']['tag'])
             ex['aibdict'] = vlblocks.block_aibdict(ex['aibdict'])
 
-            ex['hist_noaib'] = ex['hist']
+            pdb.set_trace()
+            
+            ex['hist_noaib'] = ex['hist'].copy()
             ex['hist'] = vlblocks.block_hist()
             if param['use_segs'] == True:
                 ex['hist']['tag'] = 'hist@%s_seg'%(vlblocks.bkver(ex['aibdict']['tag']))
@@ -230,7 +237,24 @@ def aibloc(param):
             
         #####################################################
         # compute kernel
+        if not glb.wrd['pretend']:
+            db = vlblock.bkfetch(ex['dbpart'], 'db')
+            seltr = [n for n in range(len(db['segs'])) if db['segs']['flag'][n] == db['TRAIN']]
+            if param['partition_data']:
+                seltr = train_seg_ids
+            else:
+                seltr = [n for n in range(len(db['segs'])) if db['segs']['flag'][n] == db['TRAIN']]
+            selts = [n for n in range(len(db['segs'])) if db['segs']['flag'][n] == db['TEST']]
+            idstr = [db['segs'][seltr]['seg']]
+            idsts = [db['segs'][selts]['seg']]
+        else:
+            idstr = []
+            idsts = []
 
+        # train
+        ex['ktr'] = vlblock.block_ker()
+
+        
         #####################################################
         # test SVM
 

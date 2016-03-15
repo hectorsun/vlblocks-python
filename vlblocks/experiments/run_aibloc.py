@@ -29,7 +29,7 @@ param={'prefix':'/home/sh/tmp/run_aibloc/',
        'partition_data':0,
 }
 
-
+#pdb.set_trace()
 param['use_segs']=False
 for c in cats:
     for d in detector_types:

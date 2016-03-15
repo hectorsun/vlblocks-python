@@ -94,7 +94,6 @@ def block_hist(bk='', *varargin):
             keep = logical(zeros(1,N))
 
         d = d[:,sel]
-        print(str(d.shape))
 
         #pdb.set_trace()
         # project features
@@ -107,14 +106,15 @@ def block_hist(bk='', *varargin):
         path_dir = os.path.join(glb.wrd['prefix'], bk['tag'], 'data')
         ensuredir(path_dir)
         
-        path_w = os.path.join(path_dir,  '%05d.w.pkl'%i)
+        path_w = os.path.join(path_dir,  '%05d.w.pkl'%seg_id)
         pickle.dump(w,open(path_w, 'wb'))
-        path_sel = os.path.join(path_dir, '%05d.sel.pkl'%i)
+        path_sel = os.path.join(path_dir, '%05d.sel.pkl'%seg_id)
         pickle.dump(sel,open(path_sel, 'wb'))
+        path_h = os.path.join(path_dir, '%05d.h.pkl'%seg_id)
+        pickle.dump(h, open(path_h, 'wb'))
 
-        print('block_hist: %3.0f%%'%(i/len(db['segs'])*100.0) ,end='\r')
+        print('block_hist: %3.1f%% completed'%(100.0*i/len(db['segs'])))
 
-    pdb.set_trace()
     bk = bkend(bk)
     return bk
 
@@ -141,7 +141,7 @@ def fetch__(bk, what, *varargin):
                             'data',
                             '%05d.h.pkl'%i)
 
-        return pickle.load(path, 'rb')
+        return pickle.load(open(path, 'rb'))
     elif what.lower() == 'words':
         i = varargin[0]
         path_w = os.path.join(glb.wrd['prefix'],

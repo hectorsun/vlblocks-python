@@ -251,7 +251,7 @@ def ikm_push__(bk, dict_, d):
 def hikm_push__(bk, dict_, d):
     #pdb.set_trace()
     
-    w=vlfeat.vl_hikmeanspush(dict_, d, verbosity=1)
+    w=vlfeat.vl_hikmeanspush(dict_, d)
     ndescriptors = d.shape[1]
     
     if bk['hikm_only_leaves']==True:
